@@ -9,17 +9,17 @@ app.use(express.json());
 
 let users = [];
 
-app.get('/api/v1/users', (req, res) => {
+app.get('/api/users', (req, res) => {
   res.json({ users: users });
 });
 
-app.post('/api/v1/users', (req, res) => {
+app.post('/api/users', (req, res) => {
   const user = { ...req.body, id: uid() };
   users.push(user);
   res.status(201).send({ status: 'created' });
 });
 
-app.put('/api/v1/user/:id', (req, res) => {
+app.put('/api/user/:id', (req, res) => {
   const id = req.params.id;
   if (users.findIndex((user) => user.id === id) === -1) {
     res.status(404).send({ status: 'not found' });
@@ -30,7 +30,7 @@ app.put('/api/v1/user/:id', (req, res) => {
   res.status(200).send({ status: 'updated' });
 });
 
-app.delete('/api/v1/user/:id', (req, res) => {
+app.delete('/api/user/:id', (req, res) => {
   const id = req.params.id;
   if (users.findIndex((user) => user.id === id) === -1) {
     res.status(404).send({ status: 'not found' });
@@ -40,6 +40,4 @@ app.delete('/api/v1/user/:id', (req, res) => {
   res.status(200).send({ status: 'deleted' });
 });
 
-app.listen(process.env.PORT || 3000, () => {
-  console.log('Listening on port 3000');
-});
+module.exports = app;
