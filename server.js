@@ -16,28 +16,40 @@ app.get('/api/users', (req, res) => {
 app.post('/api/users', (req, res) => {
   const user = { ...req.body, id: uid() };
   users.push(user);
-  res.status(201).send({ status: 'created' });
+  res.status(201).json(user);
+});
+
+app.get('/api/user/:id', (req, res) => {
+  const id = req.params.id;
+  const index = users.findIndex((user) => user.id === id);
+  if (index === -1) {
+    res.status(404).send({ status: 'not found' });
+    return;
+  }
+  res.status(200).json(users[index]);
 });
 
 app.put('/api/user/:id', (req, res) => {
   const id = req.params.id;
-  if (users.findIndex((user) => user.id === id) === -1) {
+  const index = users.findIndex((user) => user.id === id);
+  if (index === -1) {
     res.status(404).send({ status: 'not found' });
     return;
   }
-  const updatedUser = { ...req.body, id };
-  users = users.map((user) => (user.id === id ? updatedUser : user));
-  res.status(200).send({ status: 'updated' });
+  users[index] = { ...req.body };
+  res.status(200).json(users[index]);
 });
 
 app.delete('/api/user/:id', (req, res) => {
   const id = req.params.id;
-  if (users.findIndex((user) => user.id === id) === -1) {
+  const index = users.findIndex((user) => user.id === id);
+  if (index === -1) {
     res.status(404).send({ status: 'not found' });
     return;
   }
+  const deletedUser = users[index];
   users = users.filter((user) => user.id !== id);
-  res.status(200).send({ status: 'deleted' });
+  res.status(200).json(deletedUser);
 });
 
 module.exports = app;
